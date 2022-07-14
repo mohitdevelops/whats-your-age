@@ -1,12 +1,13 @@
-import { useReducer, useState } from "react";
+import { logDOM } from "@testing-library/react";
+import { useState } from "react";
 import css from "./form.module.css";
 
 const UserAgeForm = () => {
+
 	let now = new Date();
 	let date = now.getDate();
 	let month = now.getMonth() + 1;
 	let year = now.getFullYear();
-
 	const [yearInput, setYearInput] = useState("");
 	const [yearIsValid, setYearIsValid] = useState();
 	const [monthInput, setMonthInput] = useState("");
@@ -34,11 +35,38 @@ const UserAgeForm = () => {
 	}	
 	
 	const onSubmitHandler = (event) => {
-		event.preventDefault();		
+		event.preventDefault();			
 
-		console.log(typeof yearInput);
-		console.log(typeof monthInput);
-		console.log(typeof dateInput);
+		const calcAge = (userYear, userMonth, userDate) => {
+			let curMonthDays = new Date(year, month, 0).getDate();
+
+			let newDate = userDate > date && date + curMonthDays;
+			let newMonth = userDate > date && month - 1;
+			let newYear = userMonth > month && month + 12 && year - 1;
+
+			function calcDays(days){
+				let curDays = days - dateInput;
+				return curDays;
+			}
+			const currentDays = calcDays(newDate);
+
+			function calcMonth(month){
+				let curMonth = (month + 12) - monthInput;
+				return curMonth;
+			}
+			const currentMonth = calcMonth(newMonth)
+
+			function calcYear(year) {
+				let curYear = year - yearInput;
+				return curYear;
+			}
+			const currentYear = calcYear(newYear);
+
+			
+			console.log(`You are ${currentYear} years ${currentMonth} months and ${currentDays} days old on this planet 🤯`);
+		}		
+
+		calcAge(yearInput, monthInput, dateInput)
 	};
 
 	return (
