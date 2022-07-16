@@ -7,16 +7,13 @@ const UserAgeForm = () => {
 	let date = now.getDate();
 	let month = now.getMonth() + 1;
 	let year = now.getFullYear();
-	// const [yearInput, setYearInput] = useState("");
-	// const [yearIsValid, setYearIsValid] = useState();
-	const [monthInput, setMonthInput] = useState("");
-	const [monthIsValid, setMonthIsValid] = useState("");
+
 	const [dateInput, setDateInput] = useState("");
 	const [dateIsValid, setDateIsValid] = useState("");
 
 	const [yearState, dispatchYearFunc] = useReducer(
 		(prevState, action) => {
-			if (action.name === "useYearInput") {
+			if (action.name === "userYearInput") {
 				return {
 					year: action.yearValue,
 					isYearValid: action.yearValue > year,
@@ -25,7 +22,7 @@ const UserAgeForm = () => {
 			if (action.name === "yearOnBlur") {
 				return {
 					year: prevState.yearValue,
-					isYearValid: prevState.year > year,
+					isYearValid: prevState.yearValue > year,
 				};
 			}
 		},
@@ -35,10 +32,31 @@ const UserAgeForm = () => {
 		}
 	);
 
-	function onChangeYearInput(event) {
+	const [monthState, dispatchMonthFunc] = useReducer(
+		(prevState, action) => {
+			if (action.name === "userMonthInput") {
+				return {
+					month: action.monthValue,
+					isMonthValid: action.monthValue > 12,
+				};
+			}
+			if (action.name === "monthOnBlur") {
+				return {
+					month: prevState.monthValue,
+					isMonthValid: prevState.monthValue > 12,
+				};
+			}
+		},
+		{
+			month: "",
+			isMonthValid: null,
+		}
+	);
+
+	function onChangeYearInput(e) {
 		dispatchYearFunc({
-			name: "useYearInput",
-			yearValue: event.target.value,
+			name: "userYearInput",
+			yearValue: e.target.value,
 		});
 	}
 	function onBlurYearInput() {
@@ -47,11 +65,17 @@ const UserAgeForm = () => {
 		});
 	}
 	function onChangeMonthInput(e) {
-		setMonthInput(e.target.value);
+		dispatchMonthFunc({
+			name: "userMonthInput",
+			monthValue: e.target.value,
+		});
 	}
 	function onBlurMonthInput() {
-		setMonthIsValid(+monthInput > 12);
+		dispatchMonthFunc({
+			name: "monthOnBlur",
+		});
 	}
+
 	function onChangeDateInput(e) {
 		setDateInput(e.target.value);
 	}
@@ -70,29 +94,29 @@ const UserAgeForm = () => {
 			let newYear = userMonth > month && month + 12 && year - 1;
 
 			function calcDays(days) {
-				let curDays = days - dateInput;
+				let curDays = days - userDate;
 				return curDays;
 			}
 			const currentDays = calcDays(newDate);
 
 			function calcMonth(month) {
-				let curMonth = month + 12 - monthInput;
+				let curMonth = month + 12 - userMonth;
 				return curMonth;
 			}
 			const currentMonth = calcMonth(newMonth);
 
 			function calcYear(year) {
-				let curYear = year - yearState.yearValue;
+				let curYear = year - userYear;
 				return curYear;
 			}
 			const currentYear = calcYear(newYear);
 
 			console.log(
-				`You are ${currentYear} years ${currentMonth} months and ${currentDays} days old on this planet 🤯`
+				`You are ${currentYear} years ${currentMonth} months and ${currentDays} days old.`
 			);
 		};
 
-		calcAge(yearState.yearValue, monthInput, dateInput);
+		calcAge(yearState.yearValue, monthState.monthValue, dateInput);
 	};
 
 	return (
@@ -111,19 +135,21 @@ const UserAgeForm = () => {
 								disabled={yearState.isYearValid}
 							/>
 							<div className={css.msg}>
-								{yearState.isYearValid === true && "It seems future year date 😒"}
+								{yearState.isYearValid === true &&
+									"It seems future year date 😒"}
 							</div>
 						</div>
 						<div className={css.form_group}>
 							<input
-								value={monthInput}
+								value={monthState.monthValue}
 								onChange={onChangeMonthInput}
 								onBlur={onBlurMonthInput}
 								type="number"
 								placeholder="Your Birth Month"
 							/>
 							<div className={css.msg}>
-								{monthIsValid === true && "Only 12 months are there 😒"}
+								{monthState.isMonthValid === true &&
+									"Only 12 months are there buddy😒"}
 							</div>
 						</div>
 						<div className={css.form_group}>
