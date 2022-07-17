@@ -110,8 +110,11 @@ const UserAgeForm = () => {
 
 		const calcAge = (userYear, userMonth, userDate) => {			
 
+			//If entered date is greater than current date then it will borrow whole month from current month days
 			let newDate = userDate.dateValue > date && date + curMonthDays;
+			//Same it will borrow whole year which is +12 months
 			let newMonth = userDate.dateValue > date && month - 1;
+			//Current year will lose 1 year
 			let newYear = userMonth.monthValue > month && month + 12 && year - 1;
 
 			function calcDays(days) {
@@ -132,11 +135,13 @@ const UserAgeForm = () => {
 			}
 			const currentYear = calcYear(newYear);
 
+			// Calculating age here
 			return console.log(
 				`You are ${currentYear} years ${currentMonth} months and ${currentDays} days old.`
 			);
 		};
 
+		// Call the function with state values as an object
 		calcAge(yearState, monthState, dateState);
 	};
 
