@@ -135,7 +135,6 @@ const UserAgeForm = () => {
 			return console.log(
 				`You are ${currentYear} years ${currentMonth} months and ${currentDays} days old.`
 			);
-
 		};
 
 		calcAge(yearState, monthState, dateState);
