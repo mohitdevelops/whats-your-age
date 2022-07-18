@@ -10,11 +10,19 @@ const UserAgeFormII = () => {
   const currentMonth = currentDate.getMonth();
   const currentDay = currentDate.getDate();
 
+  // check if a date does not exist
+  // TODO: wrap this in a useEffect and use it to set form validation,
+  // i.e if date exists? let the form be clickable else disable the button and throw error
+
+  if (birthDay > 31 || birthMonth > 12 || birthYear > currentYear) {
+    console.log("Invalid Date!!!");
+  }
+
   const submitHandler = (event) => {
     event.preventDefault();
     const convertedBirthDate = new Date(birthYear, birthMonth, birthDay);
     const convertedBirthYear = convertedBirthDate.getFullYear();
-    const convertedBirthMonth = convertedBirthDate.getMonth() -1;
+    const convertedBirthMonth = convertedBirthDate.getMonth() - 1;
     const convertedBirthDay = convertedBirthDate.getDate();
     console.log(
       calcAge(convertedBirthYear, convertedBirthMonth, convertedBirthDay)
