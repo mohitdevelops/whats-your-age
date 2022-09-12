@@ -1,7 +1,7 @@
 import { useState } from "react";
 import css from "./form.module.css";
 
-const UserAgeForm = ({ userData }) => {
+const UserAgeForm = (props) => {
 	const [birthYear, setBirthYear] = useState("");
 	const [isBirthYearValid, setIsBirthYearValid] = useState(true);
 	const [birthMonth, setBirthMonth] = useState("");
@@ -17,7 +17,6 @@ const UserAgeForm = ({ userData }) => {
 
 	const onSubmitHandler = (e) => {
 		e.preventDefault();
-
 		const calcAge = () => {
 			let calcYear;
 			let calcMonth;
@@ -32,11 +31,18 @@ const UserAgeForm = ({ userData }) => {
 				calcMonth = currentMonth - birthMonth;
 				calcYear = currentYear - birthYear;
 			}
-
-			console.log(`Year:${calcYear}, Month:${calcMonth}, Day:${calcDay}`);
-			console.log(calcDay);
+			// 👇 here I'm trying to send the data
+			props.DOBData({
+				calcYear,
+				calcMonth,
+				calcDay,
+			});
+			props.showModal(true)
 		};
 		calcAge();
+		setBirthYear('');
+		setBirthMonth('');
+		setBirthDay('');
 	};
 
 	return (
@@ -51,6 +57,7 @@ const UserAgeForm = ({ userData }) => {
 								onChange={(e) => setBirthYear(e.target.value)}
 								type="number"
 								placeholder="Your Birth Year"
+								// onBlur={checkYear}
 							/>
 							<div className={css.msg}>
 								{!isBirthYearValid && "Invalid Year"}
